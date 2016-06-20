@@ -193,16 +193,22 @@ public class LedSwitchesFragment extends Fragment implements OnLightToggledListe
                                     R.string.error_unexpected_states, Snackbar.LENGTH_LONG)
                                     .show();
                         } else {
-                            Log.i(TAG, "Success querying device for LEDs! Populating now.");
-
                             // Convert list of boolean states to Led Objects, use them
                             // to populate a collection of UI switches for the user.
                             ArrayList<Boolean> ledStates =  (ArrayList<Boolean>) state.get("_leds");
                             mAdapter.clear();
-                            for (Boolean ledState : ledStates) {
-                                mAdapter.add(new Led(ledState));
-                            }
 
+                            if (ledStates == null) {
+                                Log.i(TAG, "LEDs could not be found.");
+                                Snackbar.make(LedSwitchesFragment.this.getView(),
+                                        R.string.error_unexpected_states, Snackbar.LENGTH_LONG)
+                                        .show();
+                            } else {
+                                Log.i(TAG, "Success querying device for LEDs! Populating now.");
+                                for (Boolean ledState : ledStates) {
+                                    mAdapter.add(new Led(ledState));
+                                }
+                            }
                         }
                     }
                 }
