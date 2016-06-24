@@ -5,10 +5,11 @@ package com.google.samples.apps.ledtoggler.devices;
  */
 public class IoTGenericDevice extends IoTDevice {
 
-    private String mType;
+    private String mType, mJsonDescriptor;
 
-    private IoTGenericDevice(String type) {
+    private IoTGenericDevice(String type, String jsonDescriptor) {
         mType = type;
+        mJsonDescriptor = jsonDescriptor;
     }
 
     @Override
@@ -27,4 +28,7 @@ public class IoTGenericDevice extends IoTDevice {
         return true;
     }
 
+    public String getmJsonDescriptor() {
+        return mJsonDescriptor;
+    }
 }

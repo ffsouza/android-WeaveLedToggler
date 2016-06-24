@@ -27,7 +27,7 @@ public class IotGenericDeviceViewHolder extends IoTDevicesControlPanelAdapter.Ab
                             @Override
                             public void onCommandFinished(boolean success) {
                                 if (mDevice != null) {
-                                    //TODO: Update UI
+                                    updateUi();
                                 }
                             }
                         });
@@ -39,10 +39,17 @@ public class IotGenericDeviceViewHolder extends IoTDevicesControlPanelAdapter.Ab
     public void bindView(IoTDevice device, int position) {
         super.bindView(device, position);
 
-        IoTGenericDevice led = (IoTGenericDevice) device;
-
-
+        updateUi();
     }
 
+    public void updateUi(){
+        if(mDevice == null){
+            return;
+        }
+
+        IoTGenericDevice genericDevice = (IoTGenericDevice) mDevice;
+        //TODO: Fill UI according to information of JSON sent by the generic device
+
+    }
 }
 

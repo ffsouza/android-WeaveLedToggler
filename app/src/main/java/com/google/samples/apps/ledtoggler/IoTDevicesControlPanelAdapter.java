@@ -21,9 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
+import com.google.samples.apps.ledtoggler.devices.AirConditioner;
 import com.google.samples.apps.ledtoggler.devices.IoTDevice;
 import com.google.samples.apps.ledtoggler.devices.Led;
 import com.google.samples.apps.ledtoggler.ui.AdapterViewTypes;
+import com.google.samples.apps.ledtoggler.ui.AirConditionerViewHolder;
 import com.google.samples.apps.ledtoggler.ui.IotGenericDeviceViewHolder;
 import com.google.samples.apps.ledtoggler.ui.LedViewHolder;
 
@@ -35,7 +37,6 @@ import java.util.ArrayList;
  * callback on the given {@link OnLightToggledListener}.
  */
 public class IoTDevicesControlPanelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
 
     private static final String TAG = IoTDevicesControlPanelAdapter.class.getSimpleName();
 
@@ -80,9 +81,15 @@ public class IoTDevicesControlPanelAdapter extends RecyclerView.Adapter<Recycler
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.listitem_device_air_conditioner, parent, false);
-            return new LedViewHolder(v);
+            return new AirConditionerViewHolder(v);
 
-        } else {//default
+        } else if (viewType == AdapterViewTypes.GENERIC.getId()) {
+            // create a new view
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.listitem_device_generic, parent, false);
+            return new IotGenericDeviceViewHolder(v);
+
+        }else {//default
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.listitem_device_generic, parent, false);

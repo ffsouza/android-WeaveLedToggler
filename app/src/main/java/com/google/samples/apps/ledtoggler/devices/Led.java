@@ -16,14 +16,16 @@
 
 package com.google.samples.apps.ledtoggler.devices;
 
-import com.google.samples.apps.ledtoggler.devices.IoTDevice;
-
 public class Led extends IoTDevice {
 
     private static String TYPE = "LED";
 
-    private boolean mLightOn;
+    // State
+    public interface DataItems {
+        String LED_STATE_ON = "LED_STATE_ON";
+    }
 
+    private boolean mLightOn;
 
     public Led(boolean lightOn) {
         mLightOn = lightOn;
@@ -48,6 +50,7 @@ public class Led extends IoTDevice {
         if (commandType == IoTUiCommand.CLICK) {
             // Update the internal model
             toggleLight();
+            onDataUpdated(DataItems.LED_STATE_ON, mLightOn);
         }
         return true;
     }

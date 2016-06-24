@@ -33,8 +33,8 @@ limitations under the License.
     <string name="menu_oss_licensing">Open Source Licenses</string>
     <string name="menu_refresh">Refresh</string>
     <string name="menu_more_devices">Authorize more devices</string>
-    <string name="title_text">LED Toggler</string>
-    <string name="led_text">L E D  %1$d</string>
+    <string name="title_text">MotToI</string>
+    <string name="led_text">Device %1$d</string>
     <string name="error_invalid_cloud_project_number">Invalid CLOUD_PROJECT_NUMBER. Please, update it in MainActivity.</string>
     <string name="error_resolution_intent_cannot_run">Please, check if the Weave Management App is installed. See log for details.</string>
     <string name="error_request_access">Could not request access for devices. See log for more details</string>

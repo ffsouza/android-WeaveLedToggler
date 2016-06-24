@@ -8,10 +8,17 @@ public class AirConditioner extends IoTDevice {
 
     private static String TYPE = "AIR_CONDITIONER";
 
+    // State
+    public interface DataItems {
+        String TEMPERATURE = "TEMPERATURE";
+    }
+
+    private float mTemperature;
+
+    //Commands
     private static String TEMPERATURE_UP = "TEMPERATURE_UP";
     private static String TEMPERATURE_DOWN = "TEMPERATURE_DOWN";
 
-    private float mTemperature;
 
     public AirConditioner(float temperature) {
         mTemperature = temperature;
@@ -37,18 +44,21 @@ public class AirConditioner extends IoTDevice {
         return true;
     }
 
-    public float getTemperatura() {
+    public float getTemperature() {
         return mTemperature;
     }
 
     public boolean temperatureUp() {
         ++mTemperature;
+        //TODO: send command
+        onDataUpdated(DataItems.TEMPERATURE, mTemperature);
         return true;
     }
 
     public boolean temperatureDown() {
         --mTemperature;
+        //TODO: send command
+        onDataUpdated(DataItems.TEMPERATURE, mTemperature);
         return true;
     }
-
 }
