@@ -45,4 +45,15 @@ limitations under the License.
     <string name="unknown_device_type">(unknown)</string>
     <string name="image_description_device_icon">Device icon</string>
 
+
+    <!-- -->
+    <string name="iotitem_generic_device_description">IoT Device</string>
+
+    <string name="iotitem_led_description">Light</string>
+    <string name="iotitem_air_conditioner_description">Air Conditioner</string>
+    <string name="iotitem_tv_description">TV</string>
+    <string name="iotitem_microwave_description">Microwave</string>
+    <string name="iotitem_oven_description">Oven</string>
+
+
 </resources>

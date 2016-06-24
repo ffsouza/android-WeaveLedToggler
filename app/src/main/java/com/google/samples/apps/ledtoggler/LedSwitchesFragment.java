@@ -34,6 +34,7 @@ import com.google.android.apps.weave.apis.data.WeaveApiClient;
 import com.google.android.apps.weave.apis.data.WeaveDevice;
 import com.google.android.apps.weave.apis.data.responses.Response;
 import com.google.android.apps.weave.framework.apis.Weave;
+import com.google.samples.apps.ledtoggler.devices.Led;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ import java.util.Map;
 public class LedSwitchesFragment extends Fragment implements OnLightToggledListener {
     private static final String TAG = "LedSwitchesFragment";
 
-    private LedSwitchesAdapter mAdapter;
+    private IoTDevicesControlPanelAdapter mAdapter;
 
     // Instance of the WeaveApi.
     private WeaveApiClient mApiClient;
@@ -68,7 +69,7 @@ public class LedSwitchesFragment extends Fragment implements OnLightToggledListe
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new LedSwitchesAdapter(this);
+        mAdapter = new IoTDevicesControlPanelAdapter(this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setHasFixedSize(true);
 

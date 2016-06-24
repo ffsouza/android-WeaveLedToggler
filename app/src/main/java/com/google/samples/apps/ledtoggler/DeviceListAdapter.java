@@ -35,19 +35,19 @@ import com.google.android.apps.weave.apis.data.WeaveDevice;
  * adapter, a corresponding card will be created. When clicked, the card will launch a new
  * {@link LedActivity}.
  */
-public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.ViewHolder> {
+public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder> {
     private static final String TAG = DeviceListAdapter.class.getSimpleName();
 
     private final ArrayMap<String, Pair<WeaveDevice, ModelManifest>> mDataSet;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class DeviceViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView name;
         public final TextView description;
         public final TextView deviceType;
         public final ImageView deviceImage;
 
-        public ViewHolder(final View parentView, final TextView name,
+        public DeviceViewHolder(final View parentView, final TextView name,
                           final TextView description, final TextView deviceType,
                           final ImageView deviceImage) {
             super(parentView);
@@ -78,12 +78,11 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listitem_device, parent, false);
-        return new ViewHolder(v,
+        return new DeviceViewHolder(v,
                 (TextView) v.findViewById(R.id.device_title),
                 (TextView) v.findViewById(R.id.device_description),
                 (TextView) v.findViewById(R.id.device_device_type),
@@ -91,7 +90,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(DeviceViewHolder holder, int position) {
         Pair<WeaveDevice, ModelManifest> data= mDataSet.valueAt(position);
         holder.name.setText(data.first.getName());
         holder.description.setText(data.first.getDescription());
