@@ -16,6 +16,10 @@
 
 package com.google.samples.apps.ledtoggler.devices;
 
+import com.google.android.apps.weave.apis.data.Command;
+
+import java.util.HashMap;
+
 public class Led extends IoTDevice {
 
     private static String TYPE = "LED";
@@ -26,17 +30,21 @@ public class Led extends IoTDevice {
     }
 
     private boolean mLightOn;
+    private int mLedNumber;
 
-    public Led(boolean lightOn) {
+    public Led(String deviceId, boolean lightOn) {
+        super(deviceId);
         mLightOn = lightOn;
+        mLedNumber = 0;
+    }
+
+    public Led(String deviceId, int ledNumber, boolean lightOn) {
+        super(deviceId);
+        mLightOn = lightOn;
+        mLedNumber = ledNumber;
     }
 
     public boolean isLightOn() {
-        return mLightOn;
-    }
-
-    public boolean toggleLight() {
-        mLightOn = !mLightOn;
         return mLightOn;
     }
 
@@ -49,9 +57,52 @@ public class Led extends IoTDevice {
     public boolean processCommand(IoTUiCommand commandType, String data) {
         if (commandType == IoTUiCommand.CLICK) {
             // Update the internal model
-            toggleLight();
-            onDataUpdated(DataItems.LED_STATE_ON, mLightOn);
+
+            setDeviceLightState(!isLightOn());
         }
         return true;
     }
+
+
+    /**
+     * Sets the state of a single LED
+     *
+     * @param lightState Whether the LED should be "on" or not.
+     */
+    public void setDeviceLightState(final boolean lightState) {
+
+        // Listview is 0-based, Led index in the brillo app is 1-based.
+        final int normalizedLedIndex = mLedNumber + 1;
+
+        Command command = getSetLightStateCommand(normalizedLedIndex, lightState);
+
+        sendWeaveCommand(command, new WeaveCommandCallback() {
+            @Override
+            public void onResult(boolean success) {
+                if (success) {
+                    mLightOn = lightState;
+
+                    onDataUpdated(DataItems.LED_STATE_ON, lightState);
+                }
+
+            }
+        });
+    }
+
+    /**
+     * Creates a Weave command for adjusting a single LED.
+     *
+     * @param ledIndex The index of the LED to adjust.
+     * @param lightOn  Whether the LED should be on or not.
+     * @return an executable weave command to toggle the LED to the desired state.
+     */
+    private Command getSetLightStateCommand(int ledIndex, boolean lightOn) {
+        HashMap<String, Object> commandParams = new HashMap<>();
+        commandParams.put("_led", ledIndex);
+        commandParams.put("_on", lightOn);
+        return new Command()
+                .setName("_ledflasher._set")
+                .setParameters(commandParams);
+    }
+
 }

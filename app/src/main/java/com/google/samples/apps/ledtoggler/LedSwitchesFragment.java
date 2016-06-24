@@ -34,6 +34,7 @@ import com.google.android.apps.weave.apis.data.WeaveApiClient;
 import com.google.android.apps.weave.apis.data.WeaveDevice;
 import com.google.android.apps.weave.apis.data.responses.Response;
 import com.google.android.apps.weave.framework.apis.Weave;
+import com.google.samples.apps.ledtoggler.devices.IoTWeaveManager;
 import com.google.samples.apps.ledtoggler.devices.Led;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ import java.util.Map;
 /**
  * Handles the RecyclerView displaying a list of lights, handles interactions with Weave API.
  */
-public class LedSwitchesFragment extends Fragment implements OnLightToggledListener {
+public class LedSwitchesFragment extends Fragment {
     private static final String TAG = "LedSwitchesFragment";
 
     private IoTDevicesControlPanelAdapter mAdapter;
@@ -69,13 +70,17 @@ public class LedSwitchesFragment extends Fragment implements OnLightToggledListe
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new IoTDevicesControlPanelAdapter(this);
+        mAdapter = new IoTDevicesControlPanelAdapter();
         recyclerView.setAdapter(mAdapter);
         recyclerView.setHasFixedSize(true);
 
         initializeApiClient();
 
         return layout;
+    }
+
+    private void initializeApiClient(){
+        IoTWeaveManager.initializeApiClient(getContext());
     }
 
     @Override
@@ -88,74 +93,11 @@ public class LedSwitchesFragment extends Fragment implements OnLightToggledListe
         }
     }
 
-    /**
-     * Generates an Api client instance, sets up a listener to react to devices being either
-     * discovered or lost.  All code related to initializing the Weave API client should go here.
-     */
-    private void initializeApiClient() {
-        mApiClient = new WeaveApiClient(getContext());
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        updateLightStates();
-    }
 
-    /**
-     * Creates a Weave command for adjusting a single LED.
-     * @param ledIndex The index of the LED to adjust.
-     * @param lightOn Whether the LED should be on or not.
-     * @return an executable weave command to toggle the LED to the desired state.
-     */
-    public Command getSetLightStateCommand(int ledIndex, boolean lightOn) {
-        HashMap<String, Object> commandParams = new HashMap<>();
-        commandParams.put("_led", ledIndex);
-        commandParams.put("_on", lightOn);
-        return new Command()
-                .setName("_ledflasher._set")
-                .setParameters(commandParams);
-    }
-
-    /**
-     * Sets the state of a single LED
-     * @param device The target weave device
-     * @param ledIndex The index of the LED to adjust
-     * @param lightState Whether the LED should be "on" or not.
-     */
-    public void setDeviceLightState(final WeaveDevice device, final int ledIndex,
-                                    final boolean lightState) {
-        // Listview is 0-based, Led index in the brillo app is 1-based.
-        final int normalizedLedIndex = ledIndex + 1;
-
-        // Network call, punt off the main thread.
-        new AsyncTask<Void, Void, Response<CommandResult>>() {
-
-            @Override
-            protected Response<CommandResult> doInBackground(Void... params) {
-                Command command = getSetLightStateCommand(normalizedLedIndex, lightState);
-
-                return Weave.COMMAND_API.execute(
-                        mApiClient,
-                        device.getId(),
-                        command);
-            }
-
-            @Override
-            protected void onPostExecute(Response<CommandResult> result) {
-                super.onPostExecute(result);
-                if (result != null) {
-                    if (!result.isSuccess() || result.getError() != null) {
-                        Log.e(TAG, "Failure setting light state: " + result.getError());
-                        Snackbar.make(LedSwitchesFragment.this.getView(),
-                                R.string.error_setting_state, Snackbar.LENGTH_LONG)
-                                .show();
-                    } else {
-                        Log.i(TAG, "Success setting light state!");
-                    }
-                }
-            }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        updateDevicesState();
     }
 
     /**
@@ -164,7 +106,7 @@ public class LedSwitchesFragment extends Fragment implements OnLightToggledListe
      * of Led switches, each initialized to the correct state. E.g if the board has 3 LEDs in
      * positions "on, off, on", the UI will have 3 switches set to "on, off, on".
      */
-    public void updateLightStates() {
+    public void updateDevicesState() {
         // Network call, punt off the main thread.
         new AsyncTask<Void, Void, Response<DeviceState>>() {
 
@@ -216,10 +158,5 @@ public class LedSwitchesFragment extends Fragment implements OnLightToggledListe
             }
 
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onLightToggled(int position, boolean newLightState) {
-        setDeviceLightState(mDevice, position, newLightState);
     }
 }

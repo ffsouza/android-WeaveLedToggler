@@ -40,8 +40,6 @@ public class IoTDevicesControlPanelAdapter extends RecyclerView.Adapter<Recycler
 
     private static final String TAG = IoTDevicesControlPanelAdapter.class.getSimpleName();
 
-    private final OnLightToggledListener lightToggledListener;
-
     private final ArrayList<IoTDevice> mDataSet;
 
     public abstract static class AbstractViewHolder extends RecyclerView.ViewHolder {
@@ -65,9 +63,8 @@ public class IoTDevicesControlPanelAdapter extends RecyclerView.Adapter<Recycler
     }
 
 
-    public IoTDevicesControlPanelAdapter(OnLightToggledListener lightToggledListener) {
+    public IoTDevicesControlPanelAdapter() {
         this.mDataSet = new ArrayList<>();
-        this.lightToggledListener = lightToggledListener;
     }
 
     @Override
